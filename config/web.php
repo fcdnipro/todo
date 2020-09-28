@@ -50,6 +50,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 "" => "site/index",
+                "sql-test" =>"sql-test/index",
                 "login" => "site/login",
                 "logout" => "site/logout",
                 "create-user" => "site/create-user",

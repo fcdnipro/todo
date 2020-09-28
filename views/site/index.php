@@ -227,8 +227,8 @@ $this->title = 'RubyGarage Test TODO';
                             '<div class="main-panel same-block">\n' +
                             '<span class="glyphicon glyphicon-th-list btn-lg"></span>' +
                             '<span id="projectName+' + result.project.id + '">' + result.project.name + '</span>\n' +
-                            '<i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#editModal" onclick="editProject(' + result.project.id + ');"></i>\n' +
-                            '<i class="glyphicon glyphicon-trash" onclick="removeProject(' + result.project.id + ')"></i>\n' +
+                            '<i class="glyphicon glyphicon-pencil right-buttons" data-toggle="modal" data-target="#editModal" onclick="editProject(' + result.project.id + ');"></i>\n' +
+                            '<i class="glyphicon glyphicon-trash right-buttons" onclick="removeProject(' + result.project.id + ')"></i>\n' +
                             '</div>\n' +
                             '<div class="add-panel same-block">' +
                             '<div class="glyphicon glyphicon-plus btn-lg"></div>' +
