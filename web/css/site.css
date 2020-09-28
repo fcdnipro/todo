@@ -1,0 +1,192 @@
+/* Include the padding and border in an element's total width and height */
+* {
+    box-sizing: border-box;
+    margin: auto;
+}
+
+/* Remove margins and padding from the list */
+body{
+    font-family: Arial, serif;
+    min-width: 300px;
+}
+
+.main-panel{
+    display: block;
+    color: #fff;
+    clear: both;
+    margin: 0px auto;
+    border-radius: 2px 2px 0 0;
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    background: linear-gradient(to bottom, #5280bd, #355ea1);
+    border: 1px solid #1a4d8b;
+    border-top: none;
+    height: 50px;
+}
+
+
+.add-panel{
+    clear: both;
+    margin: 0px auto;
+    border-radius: 2px 2px 0 0;
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #c5c5c5;
+    position: relative;
+    min-height: 20px;
+    background: #d3d3d3;
+    min-height: 50px;
+}
+
+.content-block{
+    border-radius: 0 0 15px 15px;
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    border: 0.5px solid #eef1f0;
+    background: white;
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    overflow: hidden;
+    color: #9d9d9d;
+}
+
+.same-block{
+
+    max-width: 700px;
+    margin: auto;
+    padding: 5px;
+}
+
+.btn-group{
+    margin-bottom: 20px;
+}
+
+
+.content-block .list-element{
+    min-height: 40px;
+}
+
+.content-block .list-element:hover{
+    background: #fcfed4;
+    transition: 1s;
+}
+
+.content-block .list-element td{
+    padding: 10px;
+}
+
+.text-container{
+    width: 70%;
+}
+
+.checkbox-container{
+    width: 10%;
+}
+.jumbotron{
+    margin-top: 70px;
+}
+
+.content-block .list-element td.buttons-container{
+    width: 7%;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.main-panel .btn-lg{
+    padding: 5px 10px;
+}
+
+.right-buttons{
+    padding-top: 10px;
+    padding-right: 5px;
+    float: right;
+}
+
+.add-panel .btn-lg{
+    float: left;
+    padding: 5px;
+    display: inline-flex;
+}
+.project-block{
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+.login-registration{
+    margin-bottom: 50px;
+    max-width: 400px;
+}
+
+.glyphicon-pencil:hover,
+.glyphicon-sort:hover,
+.glyphicon-trash:hover,
+.glyphicon-arrow-up:hover,
+.glyphicon-arrow-down:hover{
+    color: black;
+    transition: 1s;
+    cursor: pointer;
+}
+
+.glyphicon-arrow-up,
+.glyphicon-arrow-down{
+    display: inline;
+    width: 100%;
+}
+
+.glyphicon-arrow-up,.glyphicon-arrow-down{
+    margin-right: 5px;
+}
+
+.main-button-block{
+    text-align: center;
+    margin-top: 40px;
+}
+.comp {
+    text-align: center;
+}
+.jumbotron {
+    text-align: center;
+}
+.main-button-block button{
+    color: #fff;
+    background: linear-gradient(to bottom, #5280bd, #355ea1);
+}
+
+.main-button-block button:hover{
+    background: linear-gradient(to bottom, #355ea1, #5280bd);
+}
+
+
+#login_register_container{
+    position: relative;
+}
+
+.error{
+    color: #D8000C;
+    font-size: 12px;
+    display: none;
+    margin-top: 10px;
+}
+
+.checked-element{
+    background: #d6e9c6;
+}
+.input-group {
+    width: 90%;
+}
+.navbar .container, .navbar .container-fluid, .navbar .container-sm, .navbar .container-md, .navbar .container-lg, .navbar .container-xl {
+    display: block;
+}
+.registration {
+    float: right;
+}
+.site-login {
+    margin-top: 50px;
+}
+.invalid-tooltip {
+    position: unset;
+}
+.modal {
+    min-width: 350px;
+}
