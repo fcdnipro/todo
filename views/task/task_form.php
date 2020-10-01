@@ -12,7 +12,12 @@
 
         <tr class="list-element <?= $task[$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?>">
             <td class="checkbox-container"><input type="checkbox" id="doneTask<?= $task[$keyT]['id'] ?>" name="status" <?= $task[$keyT]['status'] == 1 ? 'checked' : '' ?> disabled/></td>
-            <td class="text-container"><span id="taskName<?= $task[$keyT]['id'] ?>"><?=$task[$keyT]['name']?></span></td>
+            <td class="text-container">
+                <span id="taskName<?= $task[$keyT]['id'] ?>"><?=$task[$keyT]['name']?></span>
+                <span class="status-text">
+                    Deadline expires <?=date('F d, Y H:i:s', strtotime($task[$keyT]['deadline']))?>
+                </span>
+            </td>
             <td class="buttons-container">
                 <?php if ($task[$keyT]['status'] == 0):?>
                     <?php

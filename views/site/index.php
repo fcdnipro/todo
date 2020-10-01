@@ -11,10 +11,9 @@ $this->title = 'RubyGarage Test TODO';
 
         <div class="body-content">
             <div class="form-group" id="projects">
-                <div id="projects">
-                    <div id="display_msg"></div>
-                    <div id="result_form">
-                        <?php foreach ($projects as $keyP => $valP): ?>
+                <div id="display_msg"></div>
+                <div id="result_form">
+                    <?php foreach ($projects as $keyP => $valP): ?>
                         <div class="project-block" id="projectBlock<?= $projects[$keyP]['id'] ?>">
                             <div class="main-panel same-block">
                                 <span class="glyphicon glyphicon-th-list btn-lg"></span>
@@ -23,70 +22,73 @@ $this->title = 'RubyGarage Test TODO';
                                 <span  class="glyphicon glyphicon-trash right-buttons" onclick="removeProject(<?= $projects[$keyP]['id'];?>)"></span>
                             </div>
 
-                        <div class="add-panel same-block">
-                            <div class="glyphicon glyphicon-plus btn-lg"></div>
-                            <form class="needs-validation" method="post" id="create_task<?= $projects[$keyP]['id']?>" action="" novalidate>
-                                <div class="input-group">
-                                    <input type="text" pattern="[a-zA-Z0-9_.*]+" class="form-control"  id="task<?= $projects[$keyP]['id']?>" name="task_name" placeholder="NAME" required/>
-                                    <div class="invalid-tooltip">
-                                        Task name not valid!
+                            <div class="add-panel same-block">
+                                <div class="glyphicon glyphicon-plus btn-lg"></div>
+                                <form class="needs-validation" method="post" id="create_task<?= $projects[$keyP]['id']?>" action="" novalidate>
+                                    <div class="input-group">
+                                        <input type="text" pattern="[a-zA-Z0-9_.*]+" class="form-control"  id="task<?= $projects[$keyP]['id']?>" name="task_name" placeholder="NAME" required/>
+                                        <div class="invalid-tooltip">
+                                            Task name not valid!
+                                        </div>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-success add-task" onclick="createTask(<?= $projects[$keyP]['id'] ?>)">Add Task</button>
+                                        </span>
                                     </div>
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-success add-task" onclick="createTask(<?= $projects[$keyP]['id'] ?>)">Add Task</button>
-                                    </span>
-                                </div>
-                            </form>
-                            <div class="alert alert-danger error" id="taskMsgContainer<?= $projects[$keyP]['id']?>" ></div>
-                        </div>
-                                <div id="taskContainer<?= $projects[$keyP]['id']?>">
-                                    <table class="content-block" cellspacing="0" border="1px">
-                                        <?php $cnt = 1;
-                                        $cntChecked = 0;
+                                </form>
+                                <div class="alert alert-danger error" id="taskMsgContainer<?= $projects[$keyP]['id']?>" ></div>
+                            </div>
+                            <div id="taskContainer<?= $projects[$keyP]['id']?>">
+                                <table class="content-block" cellspacing="0" border="1px">
+                                    <?php $cnt = 1;
+                                    $cntChecked = 0;
 
-                                        foreach ($projects[$keyP]['tasks'] as $keyT => $valT)
-                                        {
-                                            if ($projects[$keyP]['tasks'][$keyT]['status'] == 1 || $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1)
-                                            {$cntChecked++;}
-                                        }
-                                        $cntChecked = count($projects[$keyP]['tasks']) - $cntChecked;
-                                        foreach ($projects[$keyP]['tasks'] as $keyT => $valT): ?>
-                                            <tr class="list-element <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?>" >
-                                                <td class="checkbox-container"><input type="checkbox" id="doneTask<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>" name="status" <?= $projects[$keyP]['tasks'][$keyT]['status'] == 1 ? 'checked' : '' ?> disabled/></td>
-                                                <td class="text-container"><span id="taskName<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>"><?=$projects[$keyP]['tasks'][$keyT]['name']?></span></td>
-                                                <td class="buttons-container">
-                                                    <?php if ($projects[$keyP]['tasks'][$keyT]['status'] == 0):?>
-                                                        <?php
-                                                            if ($cnt > 1 && $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0) {
-                                                                $up = '<div class="glyphicon glyphicon-arrow-up" onclick="task_up(' . $projects[$keyP]['tasks'][$keyT]['id'] . ',' . $projects[$keyP]['id'] . ')"></div>';
-                                                                echo $up;
-                                                            }
-                                                            if (($cnt < $cntChecked) && $projects[$keyP]['tasks'][$keyT]['status'] == 0) {
-                                                                $down = '<div class="glyphicon glyphicon-arrow-down" onclick="task_down(' . $projects[$keyP]['tasks'][$keyT]['id'] . ',' . $projects[$keyP]['id'] . ')"></div>';
-                                                                echo $down;
-                                                            }
-                                                        ?>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td class="buttons-container">
-                                                    <i class="glyphicon glyphicon-pencil"  id="edit<?= $projects[$keyP]['tasks'][$keyT]['id'];?>" <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ');"' : ''; ?>></i>
-                                                    <i class="glyphicon glyphicon-trash" onclick="<?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'removeTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ')' : '' ?>"></i>
-                                                </td>
-                                            </tr>
-                                            <?php $cnt++ ?>
-                                        <?php endforeach; ?>
-                                    </table>
-                                </div>
+                                    foreach ($projects[$keyP]['tasks'] as $keyT => $valT)
+                                    {
+                                        if ($projects[$keyP]['tasks'][$keyT]['status'] == 1 || $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1)
+                                        {$cntChecked++;}
+                                    }
+                                    $cntChecked = count($projects[$keyP]['tasks']) - $cntChecked;
+                                    foreach ($projects[$keyP]['tasks'] as $keyT => $valT): ?>
+                                        <tr class="list-element <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?>" >
+                                            <td class="checkbox-container"><input type="checkbox" id="doneTask<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>" name="status" <?= $projects[$keyP]['tasks'][$keyT]['status'] == 1 ? 'checked' : '' ?> disabled/></td>
+                                            <td class="text-container">
+                                                <span id="taskName<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>"><?=$projects[$keyP]['tasks'][$keyT]['name']?></span>
+                                                <span class="status-text">
+                                                    Deadline expires <?=date('F d, Y H:i:s', strtotime($projects[$keyP]['tasks'][$keyT]['deadline']))?>
+                                                </span>
+                                            </td>
+                                            <td class="buttons-container">
+                                                <?php if ($projects[$keyP]['tasks'][$keyT]['status'] == 0):?>
+                                                    <?php
+                                                        if ($cnt > 1 && $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0) {
+                                                            $up = '<div class="glyphicon glyphicon-arrow-up" onclick="task_up(' . $projects[$keyP]['tasks'][$keyT]['id'] . ',' . $projects[$keyP]['id'] . ')"></div>';
+                                                            echo $up;
+                                                        }
+                                                        if (($cnt < $cntChecked) && $projects[$keyP]['tasks'][$keyT]['status'] == 0) {
+                                                            $down = '<div class="glyphicon glyphicon-arrow-down" onclick="task_down(' . $projects[$keyP]['tasks'][$keyT]['id'] . ',' . $projects[$keyP]['id'] . ')"></div>';
+                                                            echo $down;
+                                                        }
+                                                    ?>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="buttons-container">
+                                                <i class="glyphicon glyphicon-pencil"  <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ');"' : ''; ?>></i>
+                                                <i class="glyphicon glyphicon-trash" onclick="<?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'removeTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ')' : '' ?>"></i>
+                                            </td>
+                                        </tr>
+                                        <?php $cnt++ ?>
+                                    <?php endforeach; ?>
+                                </table>
                             </div>
                         </div>
-                    </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="same-block main-button-block">
+                    <?php endforeach; ?>
+                </div>
+                <div class="same-block main-button-block">
                         <a class="btn btn-primary create-project" data-toggle="modal" data-target="#exampleModal">+ Create Project</a>
                     </div>
-                </div>
             </div>
         </div>
+
         <!-- modal create project--> <!-- The Modal -->
         <div class="modal fade" id="exampleModal">
             <div class="modal-dialog">

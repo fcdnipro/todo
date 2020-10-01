@@ -193,3 +193,16 @@ body{
 .expired {
     background-color: #f8d7da;
 }
+.status-text {
+    font-size: 11px;
+    color: #868A87;
+    margin-left: 10px;
+    float: right;
+}
+table {
+    table-layout: fixed;
+    width:100%
+}
+td {
+    word-wrap:break-word;
+}
