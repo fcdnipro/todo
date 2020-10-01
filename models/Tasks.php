@@ -35,7 +35,7 @@ class Tasks extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             //['name', 'required'],
             ['name', 'match', 'pattern' => '/^[a-zA-Z._*\d]+$/'],
-            [['deadline'], 'default', 'value' => date('Y-m-d H:i:s')],
+            [['deadline'], 'default', 'value' => date('Y-m-d H:i:s', strtotime('+ 1 day'))],
         ];
     }
 
@@ -52,5 +52,104 @@ class Tasks extends \yii\db\ActiveRecord
             'priority' => 'Priority',
             'deadline' => 'Deadline',
         ];
+    }
+
+    public static function getTasksList($date,$project_id){
+        $sqlTask = self::getTasksListSQL();
+        $task = Yii::$app->db->createCommand($sqlTask)->bindValues([
+            'date' => $date,
+            'pid' => $project_id,
+        ])->queryAll();
+
+        return $task;
+    }
+
+    public static function getTasksListSQL(){
+        $sqlTask ='
+            SELECT * 
+            FROM (
+                SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
+                FROM tasks AS t
+                WHERE t.project_id = :pid
+            ) AS t
+            ORDER BY t.deadline_flag ASC, t.status ASC, t.priority DESC 
+        ';
+
+        return $sqlTask;
+    }
+
+    public static function getTaskUp($date, $priority, $project_id){
+        $sqlTask = self::getTaskUpSQL();
+
+        $task = Yii::$app->db->createCommand($sqlTask)->bindValues([
+            'date' => $date,
+            'prior' => $priority,
+            'pid' => $project_id,
+        ])->queryAll();
+
+        return $task;
+    }
+
+    public static function getTaskUpSQL(){
+        $sqlTask ='
+            SELECT * FROM (
+                SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
+                FROM tasks AS t
+                WHERE t.project_id = :pid AND t.priority > :prior AND t.status <> 1
+                ORDER BY t.priority ASC 
+            ) AS t
+            WHERE t.deadline_flag <> 1
+            ORDER BY t.priority ASC LIMIT 1
+        ';
+
+        return $sqlTask;
+
+    }
+
+    public static function saveTask($priority, $task_id){
+        $sqlTask = self::saveTaskSQL();
+
+        $task = Yii::$app->db->createCommand($sqlTask)->bindValues([
+            't_prior' => $priority,
+            'tid' => $task_id,
+        ]);
+
+        return $task;
+    }
+
+    public static function saveTaskSQL(){
+        $sqlTask ='
+            UPDATE tasks as t
+            SET t.priority = :t_prior
+            WHERE t.id = :tid 
+        ';
+
+        return $sqlTask;
+
+    }
+
+    public static function getTaskDown($date, $priority, $project_id){
+        $sqlTask = self::getTaskDownSQL();
+        $task = Yii::$app->db->createCommand($sqlTask)->bindValues([
+            'date' => $date,
+            'prior' => $priority,
+            'pid' => $project_id,
+        ])->queryAll();
+
+        return $task;
+    }
+
+    public static function getTaskDownSQL(){
+        $sqlTask ='
+            SELECT * FROM (
+                SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
+                FROM tasks AS t
+                WHERE t.project_id = :pid
+            ) AS t
+            WHERE t.project_id = :pid AND t.priority < :tprior AND t.status <> 1 OR t.deadline_flag <> 1
+            ORDER BY t.priority DESC 
+        ';
+
+        return $sqlTask;
     }
 }

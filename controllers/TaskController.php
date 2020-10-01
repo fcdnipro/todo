@@ -61,6 +61,7 @@ class TaskController extends Controller
     }
 
         public function actionEditTask($id, $action){
+
             $taskModel = new Tasks();
             $task = $taskModel->find()->where(['id' => $id])->asArray()->one();
             $user_id = Yii::$app->user->identity->id;
@@ -107,8 +108,11 @@ class TaskController extends Controller
                 $errorMsg = [];
                 $taskName = isset($_POST["name"]) ? $_POST["name"] : '';
                 $status = !isset($_POST["status"]) ? 0 : 1;
+                $deadline = isset($_POST["deadline"]) ? $_POST["deadline"] : '';
 
                 $task = Tasks::findone($id);
+
+
                 if ($task == false || empty($task))
                 {
                     $error = true;
@@ -116,7 +120,7 @@ class TaskController extends Controller
                 } else {
                     $task->name = $taskName;
                     $task->status = $status;
-
+                    $task->deadline = $deadline;
                     if ($task->validate()) {
                         $task->save();
                         if ($task->getErrors()) {
@@ -134,9 +138,10 @@ class TaskController extends Controller
                         'name' => $taskName,
                         'status' => $status,
                         'project_id' => $task->project_id,
+
                     ],
                     'errorMsg' => $errorMsg,
-                    'error' => $error
+                    'error' => $error,
                 ];
 
                 echo json_encode($result); die();
@@ -144,7 +149,7 @@ class TaskController extends Controller
 
     }
 
-        public function actionRemoveTask($id) {
+    public function actionRemoveTask($id) {
         $error = false;
         $errorMsg = [];
         $taskModel = new Tasks();
@@ -180,14 +185,16 @@ class TaskController extends Controller
         echo json_encode($result); die();
         }
 
-        public function  actionTaskUp($id,$project_id){
+    public function  actionTaskUp($id,$project_id){
             $error = false;
             $errorMsg = [];
-
+            $date = date('Y-m-d H:i:s');
             $taskModel = new Tasks();
             $task = $taskModel->find()->where(['id' => $id])->one();
             $priority = $task->priority;
-            $prevTask = $taskModel->find()->where(['project_id' => $project_id])->andWhere(['>','priority',$priority])->andWhere(['<>','status',1])->orderBy('priority ASC')->one();
+            $prevTask = Tasks::getTaskUp($date, $priority, $project_id);
+            $prevTask = Tasks::find()->where(['id' => $prevTask[0]['id']])->one();
+
             $prevPriority = $prevTask->priority;
             $task->priority = $prevPriority;
             $prevTask->priority = $priority;
@@ -199,7 +206,6 @@ class TaskController extends Controller
                 if ($prevTask->getErrors())
                 {
                     $prevTask->priority = $prevPriority;
-                    $prevTask->save();
                     $errorMsg[] = 'Can`t replace prev task!';
 
                 }
@@ -227,17 +233,25 @@ class TaskController extends Controller
             echo json_encode($result); die();
         }
 
-        public function  actionTaskDown($id,$project_id){
+    public function  actionTaskDown($id,$project_id){
             $error = false;
             $errorMsg = [];
-
+            $date = date('Y-m-d H:i:s');
             $taskModel = new Tasks();
             $task = $taskModel->find()->where(['id' => $id])->one();
             $priority = $task->priority;
-            $prevTask = $taskModel->find()->where(['project_id' => $project_id])->andWhere(['<','priority',$priority])->andWhere(['<>','status',1])->orderBy('priority DESC')->one();
-            $prevPriority = $prevTask->priority;
-            $task->priority = $prevPriority;
-            $prevTask->priority = $priority;
+            $prevTask = Tasks::getTaskDown($date, $priority, $project_id);
+            foreach ($prevTask as $key => $val)
+            {
+                foreach ($prevTask[$key] as $keyT => $valT)
+                {
+                    $prevPriority= $prevTask[$key]['priority'];
+                    $task_id =  $prevTask[$key]['id'];
+                    $task->priority = $prevPriority;
+                }
+
+            }
+
             $task->save();
             $prevTask->save();
             if ($task->getErrors()) {
@@ -280,7 +294,9 @@ class TaskController extends Controller
     public function actionRefreshTask($id) {
 
         $taskModel = new Tasks();
-        $task = $taskModel->find()->where(['project_id' => $id])->orderBy('status ASC, priority DESC')->asArray()->all();
+        $date = date('Y-m-d H:i:s');
+        $task = Tasks::getTasksList($date,$id);
+
 
         echo $this->renderPartial('task_form',
             [
@@ -289,5 +305,7 @@ class TaskController extends Controller
         die();
 
     }
+
+
 }
 ?>

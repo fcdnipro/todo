@@ -68,6 +68,7 @@ $config = [
 
     ],
     'params' => $params,
+    'timeZone' => 'UTC',
 ];
 
 if (false) {  //YII_ENV_DEV

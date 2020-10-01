@@ -72,7 +72,19 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <!-- modal User create end-->
 <script>
+    $(document).ready(function() {
 
+        $('.site-index form').on('submit', function (e) {
+            e.preventDefault();
+        });
+
+        $('.modal').on('hidden.bs.modal', function (e) {
+            $(this).find('.error').hide();
+            $(this).find('input').val('');
+        });
+
+
+    });
     function createUser(userFormId) {
         let FormId = 'create_user';
         let valid = validateForm(FormId);
@@ -86,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     let modalId = 'userModal';
                     let msgBlock = 'display_user_msg';
                     result = $.parseJSON(response);
-                    msgAjax(msgBlock, result, modalId, false)
+                    msgAjax(msgBlock, result, modalId, false);
 
                 },
                 error: function (response) {
@@ -102,6 +114,36 @@ $this->params['breadcrumbs'][] = $this->title;
         form.classList.add('was-validated');
 
         return form.checkValidity();
+
+    }
+
+    function msgAjax(msgBlock, result, modalId = '', close = false) {
+        if (result.error == true)
+        {
+            if (result.errorMsg.length >= 1)
+            {
+                let msg = '';
+                for(let i = 0; i < result.errorMsg.length; i++)
+                {
+                    msg += result.errorMsg[i] + '<br>';
+                }
+
+                $('#' + msgBlock).show();
+                $('#' + msgBlock).html(msg);
+                if (modalId != '')
+                {
+                    $('#' + modalId + ' .error').show();
+                    $('#' + modalId + ' .error').html(msg);
+                }
+            }
+        } else {
+            if (close)
+            {
+                $('#' + modalId).modal('hide');
+            }
+
+        }
+
     }
 </script>
 

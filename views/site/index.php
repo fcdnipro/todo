@@ -27,7 +27,7 @@ $this->title = 'RubyGarage Test TODO';
                             <div class="glyphicon glyphicon-plus btn-lg"></div>
                             <form class="needs-validation" method="post" id="create_task<?= $projects[$keyP]['id']?>" action="" novalidate>
                                 <div class="input-group">
-                                    <input type="text" pattern="[a-zA-Z0-9_.*]+" class="form-control" name="task_name" placeholder="NAME" required/>
+                                    <input type="text" pattern="[a-zA-Z0-9_.*]+" class="form-control"  id="task<?= $projects[$keyP]['id']?>" name="task_name" placeholder="NAME" required/>
                                     <div class="invalid-tooltip">
                                         Task name not valid!
                                     </div>
@@ -42,22 +42,21 @@ $this->title = 'RubyGarage Test TODO';
                                     <table class="content-block" cellspacing="0" border="1px">
                                         <?php $cnt = 1;
                                         $cntChecked = 0;
+
                                         foreach ($projects[$keyP]['tasks'] as $keyT => $valT)
                                         {
-                                            if ($projects[$keyP]['tasks'][$keyT]['status']==1)
+                                            if ($projects[$keyP]['tasks'][$keyT]['status'] == 1 || $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1)
                                             {$cntChecked++;}
                                         }
                                         $cntChecked = count($projects[$keyP]['tasks']) - $cntChecked;
                                         foreach ($projects[$keyP]['tasks'] as $keyT => $valT): ?>
-
-                                            <tr class="list-element">
-                                                <td id="taskForm<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>">
+                                            <tr class="list-element <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?>" >
                                                 <td class="checkbox-container"><input type="checkbox" id="doneTask<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>" name="status" <?= $projects[$keyP]['tasks'][$keyT]['status'] == 1 ? 'checked' : '' ?> disabled/></td>
                                                 <td class="text-container"><span id="taskName<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>"><?=$projects[$keyP]['tasks'][$keyT]['name']?></span></td>
                                                 <td class="buttons-container">
                                                     <?php if ($projects[$keyP]['tasks'][$keyT]['status'] == 0):?>
                                                         <?php
-                                                            if ($cnt > 1) {
+                                                            if ($cnt > 1 && $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0) {
                                                                 $up = '<div class="glyphicon glyphicon-arrow-up" onclick="task_up(' . $projects[$keyP]['tasks'][$keyT]['id'] . ',' . $projects[$keyP]['id'] . ')"></div>';
                                                                 echo $up;
                                                             }
@@ -69,7 +68,7 @@ $this->title = 'RubyGarage Test TODO';
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="buttons-container">
-                                                    <i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#editTaskModal" onclick="editTask(<?= $projects[$keyP]['tasks'][$keyT]['id'];?>);"></i>
+                                                    <i class="glyphicon glyphicon-pencil"  id="edit<?= $projects[$keyP]['tasks'][$keyT]['id'];?>" data-toggle="modal" data-target="#editTaskModal" onclick="editTask(<?= $projects[$keyP]['tasks'][$keyT]['id'];?>);"></i>
                                                     <i class="glyphicon glyphicon-trash" onclick="removeTask(<?= $projects[$keyP]['tasks'][$keyT]['id'];?>)"></i>
                                                 </td>
                                             </tr>
@@ -166,6 +165,10 @@ $this->title = 'RubyGarage Test TODO';
                             <div class="invalid-tooltip">
                                 Task name not valid!
                             </div>
+                            <input type="text" class="form-control" name="deadline" placeholder="DEADLINE" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}"required>
+                            <div class="invalid-tooltip">
+                                Task deadline not valid!
+                            </div>
                             <input type="checkbox" id="status" name="status"/> <span>Done</span><br>
                         </form>
                         <br>
@@ -192,8 +195,6 @@ $this->title = 'RubyGarage Test TODO';
                 return false;
             }
         );
-
-        $('[data-toggle="popover"]').popover();
 
         $('.site-index form').on('submit', function (e) {
             e.preventDefault();
@@ -360,7 +361,8 @@ $this->title = 'RubyGarage Test TODO';
 
                     result = $.parseJSON(response);
                     msgAjax(msgBlock, result)
-                    if (!result.error) {
+                    if (!result.error)
+                    {
                         refreshTask(id);
                     }
                 },
@@ -400,9 +402,12 @@ $this->title = 'RubyGarage Test TODO';
                             } else {
                                 $('#' + editFormId + ' input[name="' + val + '"]').prop("checked", false);
                             }
-
                         } else {
-                            $('#' + editFormId + ' input[name="' + val + '"]').val(result.task[val]);
+                            if (val == 'deadline') {
+                                $('#' + editFormId + ' input[name="' + val + '"]').val(result.task[val]);
+                            } else {
+                                $('#' + editFormId + ' input[name="' + val + '"]').val(result.task[val]);
+                            }
                         }
                     }
 
@@ -441,7 +446,18 @@ $this->title = 'RubyGarage Test TODO';
 
                     result = $.parseJSON(response);
                     msgAjax(msgBlock, result, modalId, true);
-                    refreshTask(project_id);
+                    if (result.task.expired == true)
+                    {
+                        let task = document.getElementById('taskName' + id);
+                        console.log(task);
+                        task.classList.add('expired');
+                        $('#status').attr("disabled", true);
+                        $('#edit' + id).remove();
+                        refreshTask(project_id);
+                    } else {
+                        refreshTask(project_id);
+                    }
+
                 },
                 error: function (response) {
                     let msgBlock = 'taskMsgContainer';
@@ -563,5 +579,8 @@ $this->title = 'RubyGarage Test TODO';
         form.classList.add('was-validated');
 
         return form.checkValidity();
+    }
+    function deadline() {
+
     }
 </script>

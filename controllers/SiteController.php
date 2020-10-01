@@ -148,8 +148,9 @@ class SiteController extends Controller
         $user_id = Yii::$app->user->identity->id;
 
         $projects = $modelProjects->find()->where(['user_id' => $user_id])->asArray()->all();
+        $date = date('Y-m-d H:i:s');
         foreach ($projects as $key => $val) {
-            $projects[$key]['tasks'] = $modelTasks->find()->where(['project_id' => $projects[$key]['id']])->orderBy('status ASC, priority DESC')->asArray()->all();
+            $projects[$key]['tasks'] = Tasks::getTasksList($date,$projects[$key]['id']);
             if ($projects[$key]['tasks'] == null)
             {
                 $projects[$key]['tasks'] = [];
