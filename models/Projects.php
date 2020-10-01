@@ -29,7 +29,7 @@ class Projects extends \yii\db\ActiveRecord
         return [
             [['name'], 'string', 'max' => 255],
             [['name',], 'required',],
-            ['name', 'match', 'pattern' => '/^[a-zA-Z\d]+$/'],
+            ['name', 'match', 'pattern' => '/^[a-zA-Z\d ]+$/'],
             [['user_id'], 'integer'],
             [['user_id',], 'required',],
         ];

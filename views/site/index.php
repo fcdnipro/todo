@@ -11,7 +11,7 @@ $this->title = 'RubyGarage Test TODO';
 
         <div class="body-content">
             <div class="form-group" id="projects">
-                <div id="display_msg"></div>
+                <div id="display_msg" class="alert alert-danger error"></div>
                 <div id="result_form">
                     <?php foreach ($projects as $keyP => $valP): ?>
                         <div class="project-block" id="projectBlock<?= $projects[$keyP]['id'] ?>">
@@ -26,7 +26,7 @@ $this->title = 'RubyGarage Test TODO';
                                 <div class="glyphicon glyphicon-plus btn-lg"></div>
                                 <form class="needs-validation" method="post" id="create_task<?= $projects[$keyP]['id']?>" action="" novalidate>
                                     <div class="input-group">
-                                        <input type="text" pattern="[a-zA-Z0-9_.*]+" class="form-control"  id="task<?= $projects[$keyP]['id']?>" name="task_name" placeholder="NAME" required/>
+                                        <input type="text" pattern="[a-zA-Z0-9_.*!@#$%^&*)(-+=,? ]+" class="form-control"  id="task<?= $projects[$keyP]['id']?>" name="task_name" placeholder="NAME" required/>
                                         <div class="invalid-tooltip">
                                             Task name not valid!
                                         </div>
@@ -49,7 +49,7 @@ $this->title = 'RubyGarage Test TODO';
                                     }
                                     $cntChecked = count($projects[$keyP]['tasks']) - $cntChecked;
                                     foreach ($projects[$keyP]['tasks'] as $keyT => $valT): ?>
-                                        <tr class="list-element <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?>" >
+                                        <tr class="list-element <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?> <?= $projects[$keyP]['tasks'][$keyT]['status'] == 1 ? 'done' : ''; ?>" >
                                             <td class="checkbox-container"><input type="checkbox" id="doneTask<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>" name="status" <?= $projects[$keyP]['tasks'][$keyT]['status'] == 1 ? 'checked' : '' ?> disabled/></td>
                                             <td class="text-container">
                                                 <span id="taskName<?= $projects[$keyP]['tasks'][$keyT]['id'] ?>"><?=$projects[$keyP]['tasks'][$keyT]['name']?></span>
@@ -72,8 +72,13 @@ $this->title = 'RubyGarage Test TODO';
                                                 <?php endif; ?>
                                             </td>
                                             <td class="buttons-container">
-                                                <i class="glyphicon glyphicon-pencil"  <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ');"' : ''; ?>></i>
-                                                <i class="glyphicon glyphicon-trash" onclick="<?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'removeTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ')' : '' ?>"></i>
+                                                <?php $taskAttrEdit = 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ');"' ?>
+                                                <?php $taskAttrRemove = 'removeTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ')'?>
+                                                <?php if ($projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 1 || $projects[$keyP]['tasks'][$keyT]['status'] == 1):?>
+                                                <?php $taskAttrEdit = ''; $taskAttrRemove = ''; ?>
+                                                <?php endif; ?>
+                                                <i class="glyphicon glyphicon-pencil" <?= $taskAttrEdit ?>></i>
+                                                <i class="glyphicon glyphicon-trash" onclick="<?= $taskAttrRemove ?>"></i>
                                             </td>
                                         </tr>
                                         <?php $cnt++ ?>
@@ -84,11 +89,11 @@ $this->title = 'RubyGarage Test TODO';
                     <?php endforeach; ?>
                 </div>
                 <div class="same-block main-button-block">
-                        <a class="btn btn-primary create-project" data-toggle="modal" data-target="#exampleModal">+ Create Project</a>
-                    </div>
+                    <a class="btn btn-primary create-project" data-toggle="modal" data-target="#exampleModal">+ Create Project</a>
+                </div>
             </div>
         </div>
-
+    
         <!-- modal create project--> <!-- The Modal -->
         <div class="modal fade" id="exampleModal">
             <div class="modal-dialog">
@@ -103,7 +108,7 @@ $this->title = 'RubyGarage Test TODO';
                     <!-- Modal body -->
                     <div class="modal-body">
                         <form class="needs-validation" method="post" id="create_form" action="" novalidate>
-                            <input type="text" pattern="[a-zA-Z0-9]+" class="form-control" name="project_name" placeholder="NAME"  required/><br>
+                            <input type="text" pattern="[a-zA-Z0-9 ]+" class="form-control" name="project_name" placeholder="NAME"  required/><br>
                             <div class="invalid-tooltip">
                                 Project name not valid!
                             </div>
@@ -135,7 +140,7 @@ $this->title = 'RubyGarage Test TODO';
                     </div>
                     <div class="modal-body">
                         <form class="needs-validation" method="post" id="edit_form" action="" novalidate>
-                            <input type="text" pattern="[a-zA-Z0-9]+" class="form-control" name="name" placeholder="NAME" required/><br>
+                            <input type="text" pattern="[a-zA-Z0-9 ]+" class="form-control" name="name" placeholder="NAME" required/><br>
                             <div class="invalid-tooltip">
                                 Project name not valid!
                             </div>
@@ -163,7 +168,7 @@ $this->title = 'RubyGarage Test TODO';
                     </div>
                     <div class="modal-body">
                         <form class="needs-validation" method="post" id="editTaskForm" action="" novalidate>
-                            <input type="text" pattern="[a-zA-Z0-9._*]+" class="form-control" name="name" placeholder="NAME" required/><br>
+                            <input type="text" pattern="[a-zA-Z0-9_.*!@#$%^&*)(-+=,? ]+" class="form-control" name="name" placeholder="NAME" required/><br>
                             <div class="invalid-tooltip">
                                 Task name not valid!
                             </div>
@@ -214,7 +219,7 @@ $this->title = 'RubyGarage Test TODO';
         let valid = validateForm(projectFormId);
         if (valid) {
             $.ajax({
-                url: '/create-project',
+                url: 'create-project',
                 type: "POST",
                 dataType: "html",
                 data: $("#" + projectFormId).serialize(),
@@ -252,6 +257,7 @@ $this->title = 'RubyGarage Test TODO';
                             '</div>' +
                             '</div>';
                         $('#' + formId).prepend(newProject);
+                        $('#display_msg').hide();
                         $('#create_task' + result.project.id).on('submit', function (e) {
                             e.preventDefault();
                         });
@@ -268,7 +274,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function editProject(id) {
         $.ajax({
-            url:     '/edit-project/get/' + id,
+            url:     'edit-project/get/' + id,
             type:     "POST",
             dataType: "html",
             success: function(response) {
@@ -279,16 +285,17 @@ $this->title = 'RubyGarage Test TODO';
 
                 result = $.parseJSON(response);
                 msgAjax(msgBlock, result, modalId);
-
-                for (let val in result.project)
-                {
-                    $('#'+ editFormId + ' input[name="' + val + '"]').val(result.project[val]);
+                if (!result.error) {
+                    for (let val in result.project)
+                    {
+                        $('#'+ editFormId + ' input[name="' + val + '"]').val(result.project[val]);
+                    }
+    
+                    $('#save_project').unbind('click');
+                    $('#save_project').click({id: result.project.id, editFormId: editFormId}, function (e) {
+                        saveProject(e.data.id, e.data.editFormId);
+                    })
                 }
-
-                $('#save_project').unbind('click');
-                $('#save_project').click({id: result.project.id, editFormId: editFormId}, function (e) {
-                    saveProject(e.data.id, e.data.editFormId);
-                })
             },
             error: function(response) {
                 let msgBlock = 'display_msg';
@@ -303,7 +310,7 @@ $this->title = 'RubyGarage Test TODO';
         let valid = validateForm(editFormId);
         if (valid) {
             $.ajax({
-                url: '/edit-project/set/' + id,
+                url: 'edit-project/set/' + id,
                 type: "POST",
                 dataType: "html",
                 data: $("#" + projectFormId).serialize(),
@@ -314,8 +321,10 @@ $this->title = 'RubyGarage Test TODO';
 
                     result = $.parseJSON(response);
                     msgAjax(msgBlock, result, modalId, true);
-
-                    $('#projectName' + id).html('Name: ' + result.project.name);
+                    if (!result.error) {
+                        $('#display_msg').hide();
+                        $('#projectName' + id).html(result.project.name);
+                    }
                 },
                 error: function (response) {
                     let msgBlock = 'display_msg';
@@ -328,7 +337,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function removeProject(id) {
         $.ajax({
-            url:     '/remove-project/' + id,
+            url:     'remove-project/' + id,
             type:     "POST",
             dataType: "html",
             success: function(response) {
@@ -337,8 +346,9 @@ $this->title = 'RubyGarage Test TODO';
 
                 result = $.parseJSON(response);
                 msgAjax(msgBlock, result, modalId, true);
-
-                $('#projectBlock' + id).remove();
+                if (!result.error) {
+                    $('#projectBlock' + id).remove();
+                }
             },
             error: function(response) {
                 let msgBlock = 'display_msg';
@@ -353,7 +363,7 @@ $this->title = 'RubyGarage Test TODO';
         let valid = validateForm(taskFormId + id);
         if (valid) {
             $.ajax({
-                url: '/create-task/' + id,
+                url: 'create-task/' + id,
                 type: "POST",
                 dataType: "html",
                 data: $("#" + taskFormId + id).serialize(),
@@ -379,7 +389,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function editTask(id) {
         $.ajax({
-            url: '/edit-task/get/' + id,
+            url: 'edit-task/get/' + id,
             type: "POST",
             dataType: "html",
             success: function (response) {
@@ -437,7 +447,7 @@ $this->title = 'RubyGarage Test TODO';
         let valid = validateForm(editFormId);
         if (valid) {
             $.ajax({
-                url: '/edit-task/set/' + id,
+                url: 'edit-task/set/' + id,
                 type: "POST",
                 dataType: "html",
                 data: $("#" + projectFormId).serialize(),
@@ -472,7 +482,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function removeTask(id) {
         $.ajax({
-            url:     '/remove-task/' + id,
+            url:     'remove-task/' + id,
             type:     "POST",
             dataType: "html",
             success: function(response) {
@@ -493,7 +503,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function task_up(id, project_id) {
         $.ajax({
-            url:     '/task-up/' + project_id + '/' + id,
+            url:     'task-up/' + project_id + '/' + id,
             type:     "POST",
             dataType: "html",
             success: function(response) {
@@ -513,7 +523,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function task_down(id,project_id) {
         $.ajax({
-            url:     '/task-down/' + project_id + '/' + id,
+            url:     'task-down/' + project_id + '/' + id,
             type:     "POST",
             dataType: "html",
             success: function(response) {
@@ -533,7 +543,7 @@ $this->title = 'RubyGarage Test TODO';
 
     function refreshTask(id) {
         $.ajax({
-            url:  '/refresh-task/' + id,
+            url:  'refresh-task/' + id,
             type:     "POST",
             dataType: "html",
             success: function(response) {

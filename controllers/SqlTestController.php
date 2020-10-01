@@ -29,7 +29,7 @@ class SqlTestController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['?','@'],
                     ],
 
                 ],

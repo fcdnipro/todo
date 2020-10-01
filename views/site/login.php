@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="form-group">
             <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('Login', ['class' => 'btn btn-primary login', 'name' => 'login-button']) ?>
                 <button type="button" class="btn btn-primary registration" data-toggle="modal" data-target="#userModal" >Registration</button>
             </div>
         </div>
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </button>
             </div>
             <div class="modal-body">
-                <form class="needs-validation" method="post" id="create_user" action="" novalidate>
+                <form class="needs-validation" method="post" id="create_user" novalidate>
                     <input type="text" pattern="[a-zA-Z0-9]+" class="form-control" name="user_name" placeholder="Name" required/><br>
                     <input type="text" pattern="[a-zA-Z0-9_.*]+" class="form-control" name="password" placeholder="Password" required/><br>
                     <div class="invalid-tooltip">
@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="create_user" class="btn btn-primary" onclick="createUser('create_user')">Create User</button>
+                <button type="button" class="btn btn-primary" onclick="createUser()">Create User</button>
             </div>
         </div>
     </div>
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <script>
     $(document).ready(function() {
 
-        $('.site-index form').on('submit', function (e) {
+        $('#create_user').on('submit', function (e) {
             e.preventDefault();
         });
 
@@ -85,20 +85,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     });
-    function createUser(userFormId) {
-        let FormId = 'create_user';
-        let valid = validateForm(FormId);
+    function createUser() {
+        let formId = 'create_user';
+        let valid = validateForm(formId);
         if (valid) {
             $.ajax({
-                url: '/create-user',
+                url: 'create-user',
                 type: "POST",
                 dataType: "html",
-                data: $("#" + userFormId).serialize(),
+                data: $("#" + formId).serialize(),
                 success: function (response) {
                     let modalId = 'userModal';
                     let msgBlock = 'display_user_msg';
                     result = $.parseJSON(response);
-                    msgAjax(msgBlock, result, modalId, false);
+                    msgAjax(msgBlock, result, modalId, true);
 
                 },
                 error: function (response) {
@@ -114,10 +114,8 @@ $this->params['breadcrumbs'][] = $this->title;
         form.classList.add('was-validated');
 
         return form.checkValidity();
-
     }
-
-    function msgAjax(msgBlock, result, modalId = '', close = false) {
+        function msgAjax(msgBlock, result, modalId = '', close = false) {
         if (result.error == true)
         {
             if (result.errorMsg.length >= 1)
@@ -146,7 +144,3 @@ $this->params['breadcrumbs'][] = $this->title;
 
     }
 </script>
-
-
-
-

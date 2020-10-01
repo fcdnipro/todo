@@ -10,7 +10,7 @@
 
     foreach ($task as $keyT => $valT): ?>
 
-        <tr class="list-element <?= $task[$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?>">
+        <tr class="list-element <?= $task[$keyT]['deadline_flag'] == 1 ? 'expired' : ''; ?> <?= $task[$keyT]['status'] == 1 ? 'done' : ''; ?>">
             <td class="checkbox-container"><input type="checkbox" id="doneTask<?= $task[$keyT]['id'] ?>" name="status" <?= $task[$keyT]['status'] == 1 ? 'checked' : '' ?> disabled/></td>
             <td class="text-container">
                 <span id="taskName<?= $task[$keyT]['id'] ?>"><?=$task[$keyT]['name']?></span>
@@ -33,8 +33,13 @@
                 <?php endif; ?>
             </td>
             <td class="buttons-container">
-                <i class="glyphicon glyphicon-pencil" <?= $task[$keyT]['deadline_flag'] == 0 ? 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $task[$keyT]['id'] . ');"' : ''; ?> ></i>
-                <i class="glyphicon glyphicon-trash" onclick="<?= $task[$keyT]['deadline_flag'] == 0 ? 'removeTask(' . $task[$keyT]['id'] . ')' : '' ?>"></i>
+                <?php $taskAttrEdit = 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $task[$keyT]['id'] . ');"' ?>
+                <?php $taskAttrRemove = 'removeTask(' . $task[$keyT]['id'] . ')'?>
+                <?php if ($task[$keyT]['deadline_flag'] == 1 || $task[$keyT]['status'] == 1):?>
+                    <?php $taskAttrEdit = ''; $taskAttrRemove = ''; ?>
+                <?php endif; ?>
+                <i class="glyphicon glyphicon-pencil" <?= $taskAttrEdit ?>></i>
+                <i class="glyphicon glyphicon-trash" onclick="<?= $taskAttrRemove ?>"></i>
             </td>
         </tr>
 

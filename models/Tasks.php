@@ -33,8 +33,8 @@ class Tasks extends \yii\db\ActiveRecord
         return [
             [['status', 'project_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            //['name', 'required'],
-            ['name', 'match', 'pattern' => '/^[a-zA-Z._*\d]+$/'],
+            ['name', 'required'],
+            ['name', 'match', 'pattern' => '/^[a-zA-Z._*!,:;@$%#&()?+=-^\d ]+$/'],
             [['deadline'], 'default', 'value' => date('Y-m-d H:i:s', strtotime('+ 1 day'))],
         ];
     }
@@ -68,9 +68,9 @@ class Tasks extends \yii\db\ActiveRecord
         $sqlTask ='
             SELECT * 
             FROM (
-                SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
+                SELECT *, IF(t.deadline <= :date AND t.status <> 1, "1", "0") AS deadline_flag
                 FROM tasks AS t
-                WHERE t.project_id = :pid
+                WHERE t.project_id = :pid 
             ) AS t
             ORDER BY t.deadline_flag ASC, t.status ASC, t.priority DESC 
         ';
@@ -93,7 +93,7 @@ class Tasks extends \yii\db\ActiveRecord
     public static function getTaskUpSQL(){
         $sqlTask ='
             SELECT * FROM (
-                SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
+                SELECT *, IF(t.deadline <= :date AND t.status <> 1, "1", "0") AS deadline_flag
                 FROM tasks AS t
                 WHERE t.project_id = :pid AND t.priority > :prior AND t.status <> 1
                 ORDER BY t.priority ASC 
@@ -120,7 +120,7 @@ class Tasks extends \yii\db\ActiveRecord
     public static function getTaskDownSQL(){
         $sqlTask ='
             SELECT * FROM (
-                SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
+                SELECT *, IF(t.deadline <= :date AND t.status <> 1, "1", "0") AS deadline_flag
                 FROM tasks AS t
                 WHERE t.project_id = :pid AND t.priority < :prior AND t.status <> 1
                 ORDER BY t.priority ASC 
