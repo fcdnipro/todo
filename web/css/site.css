@@ -68,7 +68,7 @@ body{
     min-height: 40px;
 }
 
-.content-block .list-element:hover{
+.content-block .list-element:hover:not(.expired) {
     background: #fcfed4;
     transition: 1s;
 }
