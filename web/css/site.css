@@ -193,6 +193,9 @@ body{
 .expired {
     background-color: #f8d7da;
 }
+tr.list-element.expired i{
+    cursor: not-allowed;
+}
 .status-text {
     font-size: 11px;
     color: #868A87;
