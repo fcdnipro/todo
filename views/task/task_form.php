@@ -29,7 +29,7 @@
             </td>
             <td class="buttons-container">
                 <i class="glyphicon glyphicon-pencil" <?= $task[$keyT]['deadline_flag'] == 0 ? 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $task[$keyT]['id'] . ');"' : ''; ?> ></i>
-                <i class="glyphicon glyphicon-trash" onclick="removeTask(<?= $task[$keyT]['id'];?>)"></i>
+                <i class="glyphicon glyphicon-trash" onclick="<?= $task[$keyT]['deadline_flag'] == 0 ? 'removeTask(' . $task[$keyT]['id'] . ')' : '' ?>"></i>
             </td>
         </tr>
 

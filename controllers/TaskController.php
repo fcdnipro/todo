@@ -241,17 +241,11 @@ class TaskController extends Controller
             $task = $taskModel->find()->where(['id' => $id])->one();
             $priority = $task->priority;
             $prevTask = Tasks::getTaskDown($date, $priority, $project_id);
-            foreach ($prevTask as $key => $val)
-            {
-                foreach ($prevTask[$key] as $keyT => $valT)
-                {
-                    $prevPriority= $prevTask[$key]['priority'];
-                    $task_id =  $prevTask[$key]['id'];
-                    $task->priority = $prevPriority;
-                }
+            $prevTask = Tasks::find()->where(['id' => $prevTask[0]['id']])->one();
 
-            }
-
+            $prevPriority = $prevTask->priority;
+            $task->priority = $prevPriority;
+            $prevTask->priority = $priority;
             $task->save();
             $prevTask->save();
             if ($task->getErrors()) {

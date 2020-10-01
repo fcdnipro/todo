@@ -68,8 +68,8 @@ $this->title = 'RubyGarage Test TODO';
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="buttons-container">
-                                                    <i class="glyphicon glyphicon-pencil"  id="edit<?= $projects[$keyP]['tasks'][$keyT]['id'];?>" data-toggle="modal" data-target="#editTaskModal" onclick="editTask(<?= $projects[$keyP]['tasks'][$keyT]['id'];?>);"></i>
-                                                    <i class="glyphicon glyphicon-trash" onclick="removeTask(<?= $projects[$keyP]['tasks'][$keyT]['id'];?>)"></i>
+                                                    <i class="glyphicon glyphicon-pencil"  id="edit<?= $projects[$keyP]['tasks'][$keyT]['id'];?>" <?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'data-toggle="modal" data-target="#editTaskModal" onclick="editTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ');"' : ''; ?>></i>
+                                                    <i class="glyphicon glyphicon-trash" onclick="<?= $projects[$keyP]['tasks'][$keyT]['deadline_flag'] == 0 ? 'removeTask(' . $projects[$keyP]['tasks'][$keyT]['id'] . ')' : '' ?>"></i>
                                                 </td>
                                             </tr>
                                             <?php $cnt++ ?>

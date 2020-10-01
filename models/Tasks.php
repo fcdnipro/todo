@@ -106,28 +106,6 @@ class Tasks extends \yii\db\ActiveRecord
 
     }
 
-    public static function saveTask($priority, $task_id){
-        $sqlTask = self::saveTaskSQL();
-
-        $task = Yii::$app->db->createCommand($sqlTask)->bindValues([
-            't_prior' => $priority,
-            'tid' => $task_id,
-        ]);
-
-        return $task;
-    }
-
-    public static function saveTaskSQL(){
-        $sqlTask ='
-            UPDATE tasks as t
-            SET t.priority = :t_prior
-            WHERE t.id = :tid 
-        ';
-
-        return $sqlTask;
-
-    }
-
     public static function getTaskDown($date, $priority, $project_id){
         $sqlTask = self::getTaskDownSQL();
         $task = Yii::$app->db->createCommand($sqlTask)->bindValues([
@@ -144,10 +122,11 @@ class Tasks extends \yii\db\ActiveRecord
             SELECT * FROM (
                 SELECT *, IF(t.deadline <= :date, "1", "0") AS deadline_flag
                 FROM tasks AS t
-                WHERE t.project_id = :pid
+                WHERE t.project_id = :pid AND t.priority < :prior AND t.status <> 1
+                ORDER BY t.priority ASC 
             ) AS t
-            WHERE t.project_id = :pid AND t.priority < :tprior AND t.status <> 1 OR t.deadline_flag <> 1
-            ORDER BY t.priority DESC 
+            WHERE t.deadline_flag <> 1
+            ORDER BY t.priority DESC LIMIT 1
         ';
 
         return $sqlTask;
